@@ -5,10 +5,10 @@
 
 KDNode::KDNode()
 	:split_dim(0),
-	sp(nullptr),
-	parent(nullptr),
-	left(nullptr),
-	right(nullptr)
+	sp(NULL),
+	parent(NULL),
+	left(NULL),
+	right(NULL)
 {
 
 
@@ -18,7 +18,7 @@ KDNode::KDNode(SrcPoint* s,int split,
 	KDNode* p,KDNode* l,KDNode* r)
 {
 	cout<<"This is the KDNode initation"<<endl;
-	if (s == nullptr || s->id == 0)
+	if (s == NULL || s->id == 0)
 	{
 		cout<<"the Src point's id is Zero"<<endl;
 	}else{
@@ -92,20 +92,20 @@ KDNode* KDTree::
 
 
 
-	if (variance_x >= variance_y )
-	{
-		root->setSplitDim(0);
-	}else if (variance_y > variance_x)
-	{
-		root->setSplitDim(1);
-	}
+//	if (variance_x >= variance_y )
+//	{
+//		root->setSplitDim(0);
+//	}else if (variance_y > variance_x)
+//	{
+//		root->setSplitDim(1);
+//	}
 
 
 
 
 
 
-	return node;
+	return root;
 }
 
 double KDTree::computeVariance(const Container& con,int column)

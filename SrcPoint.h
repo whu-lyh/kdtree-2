@@ -74,7 +74,7 @@ public:
 
 	void AddSrcPoint(SrcPoint* sp)
 	{
-		if (nullptr == sp)
+		if (NULL == sp)
 		{
 			cout<<"The SrcPoint is null"<<endl;
 			return;

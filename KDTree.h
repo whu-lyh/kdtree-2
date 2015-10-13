@@ -47,7 +47,7 @@ class KDTree
 public:
 	KDNode* root;
 
-	KDTree():root(nullptr){}
+	KDTree():root(NULL){}
 
 	void create(const Container& contain);
 
