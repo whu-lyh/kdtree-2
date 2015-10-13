@@ -47,6 +47,8 @@ public:
 		x = rhs.x;
 		y = rhs.y;
 		id = rhs.id;
+
+		return *this;
 	}
 
 	double x;

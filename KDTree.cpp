@@ -12,6 +12,9 @@ KDNode::KDNode()
 {
 
 
+
+
+
 }
 
 KDNode::KDNode(SrcPoint* s,int split,
@@ -62,16 +65,33 @@ void KDTree::create(const Container& contain)
 	double variance_x = 0.0;
 	double variance_y = 0.0;
 
-	variance_x = computeVariance(contain,0);
+
+	variance_x = computeVariance(contain,0);//»∑∂®µ⁄“ª÷·
 	variance_y = computeVariance(contain,1);
 
 	if (variance_x >= variance_y )
 	{
 		root->setSplitDim(0);
+		axis = 0;
 	}else if (variance_y > variance_x)
 	{
 		root->setSplitDim(1);
+		axis = 1;
 	}
+	//≈≈–Ú axis == 0 x÷·≈≈–Ú  axis ==1 y÷·≈≈–Ú
+	if(0==axis){
+
+
+
+	}else if(1==axis){
+
+
+	}
+
+
+
+
+
 
 
 
@@ -106,6 +126,31 @@ KDNode* KDTree::
 
 
 	return root;
+}
+
+
+void KDTree::QuickSort(Container& con, int sort_dim)
+{
+	int s = 0;
+	int e = con.sp_vec.size() - 1;
+
+	if(con.sp_vec.empty()){
+		cout<<"The src point vec is empty()"<<endl;
+		return ;
+	}
+
+	if(sort_dim == 0)//sort x values
+	{
+
+	}
+
+	if(sort_dim == 1)//sort y values
+	{
+
+	}
+
+
+
 }
 
 double KDTree::computeVariance(const Container& con,int column)
@@ -164,6 +209,8 @@ double KDTree::computeVariance(const Container& con,int column)
 
 	return 0.0;
 }
+
+
 
 
 double KDTree::ComputeDvalue(const list<double>& elts)

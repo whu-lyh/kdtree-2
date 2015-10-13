@@ -32,6 +32,10 @@ public:
 		split_dim = sm;
 	}
 
+	int GetSplitDim(){
+		return split_dim;
+	}
+
 private:
 
 	int   split_dim;
@@ -47,7 +51,13 @@ class KDTree
 public:
 	KDNode* root;
 
-	KDTree():root(NULL){}
+	KDTree():root(NULL),axis(0){
+		for(int i=0; i!=3;++i)
+		{
+			dim_vari.insert(make_pair(i,0.0));
+
+		}
+	}
 
 	void create(const Container& contain);
 
@@ -62,9 +72,16 @@ private:
 	//if column = 1, compute y variance
 	double computeVariance(const Container& con, int column);
 
+	void QuickSort(Container& con,int sort_dim);
+
 public:
 
 	double ComputeDvalue(const list<double>& elts);
+
+private:
+
+	map<int, double>  dim_vari;
+	int axis;
 
 
 };
