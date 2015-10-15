@@ -58,36 +58,38 @@ public:
 
 };
 
-class Container
-{
-public:
 
-	Container()
-	{
-		sp_vec.clear();
-		dim = 0;
-	}
-
-	~Container();
-
-	int GetDimensions()const{
-		return dim;
-	}
-
-	void AddSrcPoint(SrcPoint* sp)
-	{
-		if (NULL == sp)
-		{
-			cout<<"The SrcPoint is null"<<endl;
-			return;
-		}
-		sp_vec.push_back(sp);
-	}
-
-	vector<SrcPoint*> sp_vec;
-
-private:
-	int dim;
-
-};
+typedef vector<SrcPoint*>  Container;
+//class Container
+//{
+//public:
+//
+//	Container()
+//	{
+//		sp_vec.clear();
+//		dim = 0;
+//	}
+//
+//	~Container();
+//
+//	int GetDimensions()const{
+//		return dim;
+//	}
+//
+//	void AddSrcPoint(SrcPoint* sp)
+//	{
+//		if (NULL == sp)
+//		{
+//			cout<<"The SrcPoint is null"<<endl;
+//			return;
+//		}
+//		sp_vec.push_back(sp);
+//	}
+//
+//	vector<SrcPoint*> sp_vec;
+//
+//private:
+//	int dim;
+//
+//};
 

@@ -36,13 +36,24 @@ public:
 		return split_dim;
 	}
 
-private:
+	void SetValue(SrcPoint* s)
+	{
+		if(s == NULL){
+			cout<<"SrcPoint is pointing to NULL"<<endl;
+			return;
+		}
+		sp = s;
+	}
 
-	int   split_dim;
 	SrcPoint*  sp;
 	KDNode* parent;
 	KDNode* left;
 	KDNode* right;
+
+private:
+
+	int   split_dim;
+
 
 };
 
@@ -51,20 +62,18 @@ class KDTree
 public:
 	KDNode* root;
 
-	KDTree():root(NULL),axis(0){
-		for(int i=0; i!=3;++i)
-		{
-			dim_vari.insert(make_pair(i,0.0));
-
-		}
-	}
+	KDTree():root(NULL),axis(0),dims_num(0),
+			nodes_num(0){	}
 
 	void create(const Container& contain);
 
 	void destroy();
 
+	void buildTree(const Container& can, int dnumber);
 private:
 	KDNode* createKDSubTree(const Container& cont);
+
+	void buildSubTree(const Container& can, KDNode* node);
 
 	//方差：各个数据与平均数之差的平方的平均数
 	//方差应该并行计算。
@@ -72,15 +81,19 @@ private:
 	//if column = 1, compute y variance
 	double computeVariance(const Container& con, int column);
 
-	void QuickSort(Container& con,int sort_dim);
+	void QuickSort(Container& con,int sort_dim, int s, int e);
 
 public:
+
+	bool CheckContainer(const Container& can);
 
 	double ComputeDvalue(const list<double>& elts);
 
 private:
 
-	map<int, double>  dim_vari;
+	int nodes_num;
+	int dims_num;
+
 	int axis;
 
 
