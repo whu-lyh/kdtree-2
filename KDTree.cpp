@@ -50,9 +50,14 @@ KDNode& KDNode::operator=(const KDNode& rhs)
 }
 
 
-void KDTree::create(const Container& contain)
+void KDTree::create(const Container& can)
 {
 	cout<<"KDTree::create()."<<endl;
+	if(can.empty()){
+		cout<<"Container is empty"<<endl;
+		return;
+	}
+	nodes_num = can.size();
 	KDNode* root = new KDNode();
 
 //	int dims = contain.GetDimensions();
@@ -61,27 +66,34 @@ void KDTree::create(const Container& contain)
 	double variance_x = 0.0;
 	double variance_y = 0.0;
 
-	variance_x = computeVariance(contain,0);//确定第一轴
-	variance_y = computeVariance(contain,1);
+	variance_x = computeVariance(can,0);//确定第一轴
+	variance_y = computeVariance(can,1);
 
 	if (variance_x >= variance_y )
 	{
-		root->setSplitDim(0);
-		axis = 0;
+		root->setSplitDim(1);
 	}else if (variance_y > variance_x)
 	{
-		root->setSplitDim(1);
-		axis = 1;
+		root->setSplitDim(2);
 	}
-	//排序 axis == 0 x轴排序  axis ==1 y轴排序
-	if(0==axis){
+	int split = root->GetSplitDim();
 
+	int s = 0;
+	int e = can.size() - 1;
+	CopyContainer(can,ownCan);
+	cout<<"own can "<<ownCan.size()<<endl;
 
+	QuickSort(ownCan,s,e,split);
 
-	}else if(1==axis){
+	root->sp = evaluateMedian(ownCan,split);
+	root->parent = NULL;
 
+	KDNode* subLeft  = new KDNode;
+	KDNode* subRight = new KDNode;
 
-	}
+	subLeft->parent = root;
+	subRight->parent = root;
+
 
 
 
@@ -118,11 +130,11 @@ void KDTree::buildTree(const Container& can,int dnum)
 	if (variance_x >= variance_y )
 	{
 		root->setSplitDim(0);
-		axis = 0;
+
 	}else if (variance_y > variance_x)
 	{
 		root->setSplitDim(1);
-		axis = 1;
+
 	}
 	//sort then find the median
 
@@ -144,6 +156,8 @@ void KDTree::buildTree(const Container& can,int dnum)
 
 
 }
+
+
 
 void KDTree::buildSubTree(const Container& can, KDNode* node)
 {
@@ -185,87 +199,87 @@ KDNode* KDTree::
 }
 
 
-void KDTree::QuickSort(Container& can, int sort_dim,int s, int e)
+void KDTree::QuickSort(Container& can, int s,int e, int sort_dim)
 {
-
-	SrcPoint* pivot = NULL;
-	int r = e; //
-	int l = s; ///start from left side
-
-
 	if(can.empty()){
 		cout<<"The src point vec is empty()"<<endl;
 		return ;
 	}
 
-	if(sort_dim == 0)//sort x values
-	{
-		if(s>e){
-			return;
-		}
-
-		pivot = can[s];
-
-		while(l!=r){
-
-			while(pivot->x <= can[r]->x && l<r){
-				r--;
-			}
-			while(pivot->x >= can[l]->x && l<r){
-				l++;
-			}
-
-			if(l<r){
-				//switch the positions
-				SrcPoint* sp_temp = can[l];
-				can[l] = can[r];
-				can[r] = sp_temp;
-			}
-
-		}
-
-		can[s] = can[l];
-		can[l] = pivot;
-
-//		QuickSort()
-
+	if(s>e){
+		return;
 	}
 
-	if(sort_dim == 1)//sort y values
+	SrcPoint* pivot = NULL;
+	int r = e; //
+	int l = s; ///start from left side
+	pivot = can.at(s);
+
+	while(l != r)
 	{
-		if(s>e){
-			return;
-		}
-
-		pivot = can[s];
-
-		while(l!=r){
-
-			while(pivot->y <= can[r]->y && l<r){
+		if(sort_dim == 1)
+		{
+			while(pivot->x <= can.at(r)->x && l<r){
 				r--;
 			}
-			while(pivot->y >= can[l]->y && l<r){
+			while(pivot->x >= can.at(l)->x && l<r){
 				l++;
 			}
-
-			if(l<r){
-				//switch the positions
-				SrcPoint* sp_temp = can[l];
-				can[l] = can[r];
-				can[r] = sp_temp;
+		}
+		if(sort_dim == 2)
+		{
+			while(pivot->y <= can.at(r)->y && l<r){
+				r--;
 			}
-
+			while(pivot->y >= can.at(l)->y && l<r){
+				l++;
+			}
 		}
 
-		can[s] = can[l];
-		can[l] = pivot;
-	}
+		if(l<r)
+		{
+			SrcPoint* t = can.at(l);
+			can.at(l) = can.at(r);
+			can.at(r) = t;
+		}
 
+	}
+	can.at(s) = can.at(l);
+	can.at(l) = pivot;
+
+	QuickSort(can, s, l-1, sort_dim);
+	QuickSort(can, l+1, e, sort_dim);
 
 
 }
 
-double KDTree::computeVariance(const Container& can,int column)
+SrcPoint* KDTree::evaluateMedian(const Container& can, int sort_d)
+{
+	if(!CheckContainer(can))
+	{
+		return NULL;
+	}
+
+	SrcPoint* median = NULL;
+	int mid   = 0;
+	int num   = can.size();
+
+	if(num % 2 != 0)//not even
+	{
+		mid = (num+1) /2 ;
+		median = can.at(mid - 1); //start from 0;
+	}
+	if(num % 2 == 0){
+		//num is even  tricky part
+		mid = num/2 -1;
+		median = can.at(mid);
+	}
+
+	return median;
+}
+
+
+double KDTree::computeVariance(const Container& can,int sort_d)
 {
 	if (can.empty())
 	{
@@ -280,7 +294,7 @@ double KDTree::computeVariance(const Container& can,int column)
 	Container::const_iterator iter;
 //	vector<SrcPoint*>::const_iterator  iter;
 	iter = can.begin();
-	if (0 == column)
+	if (1 == sort_d)
 	{
 		for ( ;iter!=can.end();++iter)
 		{
@@ -297,11 +311,9 @@ double KDTree::computeVariance(const Container& can,int column)
 			variance +=t;
 			++iter;
 		}
-		
-		return variance;
 	}
 
-	if (1 == column)
+	if (2 == sort_d)
 	{
 		for ( ;iter!=can.end();++iter)
 		{
@@ -318,49 +330,43 @@ double KDTree::computeVariance(const Container& can,int column)
 			variance +=t;
 			++iter;
 		}
-		return variance;
 	}
-
-	return 0.0;
+	return variance;
 }
 
-
-
-
-double KDTree::ComputeDvalue(const list<double>& elts)
+void KDTree::SetSubContainer(const Container& can,
+		const SrcPoint* median,
+		Container& subLeftCan,
+		Container& subRightCan)
 {
-	if (elts.empty())
-	{
-		cout<<"The list is empty."<<endl;
-		return 0.0;
+	if(!CheckContainer(can)){
+		return;
 	}
 
-	double d_val = 0.0;
-	double ave   = 0.0;
-	double sum   = 0.0;
-	
-	int num = elts.size();
-	std::list<double>::const_iterator it = elts.begin();
-	for( ; it != elts.end(); ++it)
+	Container::const_iterator itr = can.begin();
+	while(itr!=can.end() && *itr != median)
 	{
-		sum += *it;
+		subLeftCan.push_back(*itr);
 	}
-	ave = sum / num;
-
-	double t = 0.0;
-
-	it = elts.begin();
-	for(;it!=elts.end();++it)
-	{
-		t = *it - ave;
-		t = pow(t,2);
-		d_val += t;
+	while(itr!=can.end()){
+		subRightCan.push_back(*itr);
 	}
-
-	d_val /= num;
-	return d_val;
-
 }
+
+void KDTree::CopyContainer(const Container& can, Container& newCan)
+{
+	if(can.empty()){
+		return;
+	}
+	newCan.clear();
+	Container::const_iterator itr = can.begin();
+	for(;itr!=can.end();++itr)
+	{
+		newCan.push_back(*itr);
+	}
+	cout<<"Copy's done."<<endl;
+}
+
 
 void KDTree::destroy()
 {
