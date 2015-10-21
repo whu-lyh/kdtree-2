@@ -1,7 +1,12 @@
 
+
+#ifndef SRCPOINT_H
+#define SRCPOINT_H
+
 #include <iostream>
 #include <vector>
 using namespace std;
+
 
 class SrcPoint
 {
@@ -92,4 +97,4 @@ typedef vector<SrcPoint*>  Container;
 //	int dim;
 //
 //};
-
+#endif

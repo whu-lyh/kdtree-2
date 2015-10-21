@@ -2,49 +2,100 @@
 
 #include <iostream>
 #include "KDTree.h"
-
+#include "SrcPoint.h"
 
 using namespace std;
+
+
+void CreateCan(Container& can)
+{
+	double data[6][2] = { {2,3},{5,4}, {9,6}, {4,7}, {8,1}, {7,2} };
+	can.clear();
+	SrcPoint* s = NULL;
+	Container::const_iterator itr = can.begin();
+
+	for(int i=0;i<6;++i)
+	{
+		s = new SrcPoint;
+		can.push_back(s);
+		can.at(i)->x = data[i][0];
+		can.at(i)->y = data[i][1];
+	}
+
+}
+
+void PrintCan(const Container& can)
+{
+	if(can.empty())
+	{
+		return;
+	}
+
+	Container::const_iterator itr = can.begin();
+	int i = 0;
+	for(;itr!=can.end();++itr)
+	{
+		i++;
+		cout<<" "<<i<<" x: "<<(*itr)->x<<" y: "<<(*itr)->y<<"\t"<<endl;
+	}
+
+}
+void PrintTree(const KDNode* node)
+{
+	if(node == NULL)
+	{
+		cout<<"Node is NULL"<<endl;
+		return;
+	}
+	if(node->sp == NULL)
+	{
+		return;
+	}
+	cout<<" node x: "<<node->sp->x<<" y: "<<node->sp->y<<endl;
+	if(node->left != NULL)
+	{
+		cout<<"\t";
+		cout<<"left:";
+		PrintTree(node->left);
+	}
+
+	if(node->right != NULL)
+	{
+		cout<<"\t";
+		cout<<"right:";
+		PrintTree(node->right);
+	}
+
+}
 
 int main()
 {
 	KDTree* tree = new KDTree();
 
-	list<double> list_t;
-	list_t.push_back(4);
-	list_t.push_back(9);
-	list_t.push_back(6);
-	list_t.push_back(7);
-	list_t.push_back(2);
-	list_t.push_back(8);
+	Container can;
+	CreateCan(can);
+//	PrintCan(can);
 
-	double d = tree->ComputeDvalue(list_t);
+	Container nCan;
 
-	cout<<"d: "<<d<<endl;
-
-	map<int, double>  dims_Variances;
-
-	dims_Variances.insert(make_pair(0,0.0));
-
-	dims_Variances.insert(make_pair(1,30.0));
-	dims_Variances.insert(make_pair(2,40.0));
-	dims_Variances.insert(make_pair(3,20.0));
-	dims_Variances.insert(make_pair(4,50.0));
+	tree->create(can);
+	PrintTree(tree->getRoot());
 
 
-	map<int,double>::const_iterator itr = dims_Variances.begin();
+
+//	tree->CopyContainer(can,nCan);
+//	PrintCan(nCan);
+//	cout<<" After Sort:"<<endl;
+//	tree->QuickSort(nCan,0,(nCan.size()-1),2);
+//	PrintCan(nCan);
 
 
-	int i = 0;
-	for( ;itr!=dims_Variances.end();++itr)
-	{
 
-		cout<<"the "<<i<<" "<<itr->second<<endl;
 
-		++i;
-	}
+	cout<<"node number: "<<tree->nodes_num<<endl;
 
-	cout<<"hello"<<endl;
+
+	cout<<"The End"<<endl;
 
 //	system("pause");
 	return 0;
