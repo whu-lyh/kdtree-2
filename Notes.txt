@@ -1,0 +1,41 @@
+
+
+
+KD Tree 
+build steps
+
+1.check the container:
+
+if can is empty
+    return;
+    
+if can only has one
+   root = the only one.
+
+if can have more than two
+    
+    1. caculate Variances
+    confirm the split dim;
+    
+    2. sort
+    pick up the median
+    take the median as root
+    
+    3.split the rest values in the can
+    
+    if the others just has one
+        the new one sub node
+        (left or right)
+        set the other sub node is NULL.
+        
+    if the others have more than two
+        
+        new both sub nodes
+        
+        do the recurion function
+        
+        BuildSubTree(can, node, depth);
+        
+    
+
+

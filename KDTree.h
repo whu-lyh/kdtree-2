@@ -41,6 +41,12 @@ public:
 		return split_dim;
 	}
 
+	bool isLeaf()
+	{
+		return (sp != NULL && parent != NULL
+				&& left == NULL && right == NULL);
+	}
+
 	void SetValue(SrcPoint* s)
 	{
 		if(s == NULL){
@@ -59,6 +65,8 @@ public:
 	KDNode* left;
 	KDNode* right;
 
+	unsigned  depth;
+
 private:
 
 	int   split_dim; //0 nothing 1:x, 2:y
@@ -73,7 +81,8 @@ public:
 
 	KDTree():root(NULL),
 			dims_num(0),
-			nodes_num(0){
+			nodes_num(0),
+			maxDepth(0){
 
 	}
 
@@ -83,6 +92,8 @@ public:
 	}
 
 	void create(const Container& contain);
+
+	void CreateVTwo(const Container& can);
 
 	void setDimensionNumber(int n){
 		dims_num = n;
@@ -95,8 +106,8 @@ public:
 
 public:
 
-	//�������������ƽ����֮���ƽ����ƽ����
-	//����Ӧ�ò��м��㡣
+	//锟斤拷锟筋：锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷平锟斤拷锟斤拷之锟斤拷锟狡斤拷锟斤拷锟狡斤拷锟斤拷锟�
+	//锟斤拷锟斤拷应锟矫诧拷锟叫硷拷锟姐。
 	//if column = 0, compute x variance, 
 	//if column = 1, compute y variance
 	double computeVariance(const Container& con, int sort_d);
@@ -116,7 +127,11 @@ public:
 
 	bool CheckContainer(const Container& can);
 
-	void BuildSubTree(Container& can, KDNode* node);
+	void BuildSubTreeVT(Container& c,
+			KDNode* n,
+			unsigned d);
+
+	void BuildSubTree(Container& can, KDNode* node, unsigned d);
 	int nodes_num;
 private:
 
@@ -124,6 +139,9 @@ private:
 
 	int dims_num;
 
+	unsigned  maxDepth;
+
+	void traverse(KDNode* node, unsigned md);
 
 
 
